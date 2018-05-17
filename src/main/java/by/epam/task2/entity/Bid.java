@@ -1,39 +1,41 @@
 package by.epam.task2.entity;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.math.BigDecimal;
+import java.util.Random;
 
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
+public class Bid{
+    private static final double MIN_BID_PERCENTAGE = 10;
+    private AuctionLot lot;
+    private BigDecimal deltaPrice = new BigDecimal(0);
 
-public class Bid extends Thread {
-    private static Logger logger = LogManager.getLogger();
-    private int bidId;
-    private int price;
-    private CyclicBarrier barrier;
+    public Bid(){}
 
-    public Bid(int bidId, int price, CyclicBarrier barrier) {
-        this.bidId = bidId;
-        this.price = price;
-        this.barrier = barrier;
+    public Bid(AuctionLot lot) {
+        this.lot = lot;
     }
 
-    public int getBidId() {
-        return bidId;
+    public BigDecimal getDeltaPrice() {
+        return deltaPrice;
     }
 
-    public int getPrice() {
-        return price;
+    public void setDeltaPrice(BigDecimal deltaPrice){
+        this.deltaPrice = deltaPrice;
     }
+
+    public AuctionLot getLot() {
+        return lot;
+    }
+
+    public BigDecimal calculateDeltaPrice() {
+        return BigDecimal.valueOf(lot.getPrice().doubleValue() * new Random().nextDouble() + MIN_BID_PERCENTAGE);
+    }
+
+
 
     @Override
-    public void run() {
-        try {
-            logger.log(Level.INFO, "Participant " + this.bidId + "offers a price.");
-            this.barrier.await();
-        } catch (BrokenBarrierException | InterruptedException e){
-            logger.log(Level.ERROR, e);
-        }
+    public String toString() {
+        return "Bid from " +
+                "for a lot " + lot +
+                ", deltaPrice = " + deltaPrice;
     }
 }

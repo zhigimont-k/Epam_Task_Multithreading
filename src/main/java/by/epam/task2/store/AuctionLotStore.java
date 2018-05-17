@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public enum AuctionLotStore {
+public enum AuctionLotStore implements Iterable<AuctionLot>{
     INSTANCE;
     private List<AuctionLot> store = new ArrayList<>();
 
